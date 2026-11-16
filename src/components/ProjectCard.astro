@@ -1,0 +1,307 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  tags: string[];
+  category: string;
+  image?: string;
+  link?: string;
+  featured?: boolean;
+  class?: string;
+}
+
+const {
+  title,
+  description,
+  tags = [],
+  category,
+  image,
+  link,
+  featured = false,
+  class: className = '',
+} = Astro.props;
+---
+
+<article class:list={['project-card', 'bento-card', 'hidden-reveal', className]}>
+  <div class="card-glow" aria-hidden="true"></div>
+
+  <div class="card-inner">
+    <!-- Encabezado de la tarjeta: Categoría y badges -->
+    <div class="card-meta">
+      <span class="category-badge">
+        <span class="badge-dot"></span>
+        {category}
+      </span>
+
+      <div class="meta-right">
+        {featured && (
+          <span class="featured-badge" title="Proyecto Destacado">
+            ★ Destacado
+          </span>
+        )}
+
+        {link && (
+          <a
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="external-link"
+            aria-label={`Ver proyecto ${title}`}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+          </a>
+        )}
+      </div>
+    </div>
+
+    <!-- Imagen opcional si está presente -->
+    {image && (
+      <div class="card-image-wrapper">
+        <img src={image} alt={`Captura de ${title}`} loading="lazy" class="card-image" />
+      </div>
+    )}
+
+    <!-- Contenido principal -->
+    <div class="card-body">
+      <h3 class="card-title">
+        {link ? (
+          <a href={link} target="_blank" rel="noopener noreferrer" class="title-link">
+            {title}
+          </a>
+        ) : (
+          title
+        )}
+      </h3>
+      <p class="card-description">{description}</p>
+    </div>
+
+    <!-- Etiquetas / Tags -->
+    {tags.length > 0 && (
+      <div class="card-tags">
+        {tags.map((tag) => (
+          <span class="tag-pill">
+            <span class="tag-hash">#</span>{tag}
+          </span>
+        ))}
+      </div>
+    )}
+  </div>
+</article>
+
+<style>
+  .project-card {
+    position: relative;
+    border-radius: 1.25rem;
+    background: var(--bg-card, rgba(15, 18, 27, 0.7));
+    border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 2.25rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.3s ease,
+                box-shadow 0.3s ease,
+                background-color 0.3s ease;
+  }
+
+  .project-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border-hover, rgba(255, 255, 255, 0.2));
+    background: var(--bg-card-hover, rgba(22, 27, 40, 0.85));
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5),
+                0 0 25px -5px rgba(56, 189, 248, 0.12);
+  }
+
+  /* Sutil resplandor interno */
+  .card-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: radial-gradient(circle at 80% 10%, rgba(56, 189, 248, 0.06), transparent 50%);
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .project-card:hover .card-glow {
+    opacity: 1;
+  }
+
+  .card-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 1.25rem;
+  }
+
+  /* Metadata / Categoría */
+  .card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .category-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+    background: rgba(56, 189, 248, 0.08);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    color: var(--accent, #38bdf8);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    font-family: var(--font-mono);
+  }
+
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--accent, #38bdf8);
+    box-shadow: 0 0 8px var(--accent, #38bdf8);
+  }
+
+  .meta-right {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .featured-badge {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.25rem 0.55rem;
+    border-radius: 9999px;
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #fbbf24;
+    letter-spacing: 0.02em;
+  }
+
+  .external-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+  }
+
+  .external-link:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--border-hover);
+    transform: translateY(-1px);
+  }
+
+  /* Imagen opcional */
+  .card-image-wrapper {
+    width: 100%;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    border: 1px solid var(--border-subtle);
+  }
+
+  .card-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Cuerpo */
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    flex-grow: 1;
+  }
+
+  .card-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+  }
+
+  .title-link {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .title-link:hover {
+    color: var(--accent);
+  }
+
+  .card-description {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--text-secondary);
+  }
+
+  /* Tags */
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 0.75rem;
+  }
+
+  .tag-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .tag-pill:hover {
+    color: var(--text-secondary);
+    border-color: var(--border-subtle);
+    background: rgba(255, 255, 255, 0.07);
+  }
+
+  .tag-hash {
+    color: var(--accent);
+    opacity: 0.6;
+  }
+
+  @media (max-width: 640px) {
+    .project-card {
+      padding: 1.5rem;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+    }
+  }
+</style>

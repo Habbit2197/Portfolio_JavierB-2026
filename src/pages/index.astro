@@ -1,0 +1,476 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { getCollection } from 'astro:content';
+
+const allProjects = await getCollection('projects');
+
+// Ordenamos o priorizamos proyectos destacados
+const projects = allProjects.sort((a, b) => {
+  if (a.data.featured && !b.data.featured) return -1;
+  if (!a.data.featured && b.data.featured) return 1;
+  return 0;
+});
+
+// Clases bento según el índice para crear el Bento Grid asimétrico característico
+const bentoClasses = ['bento-span-7', 'bento-span-5', 'bento-span-12'];
+
+const techStack = [
+  {
+    name: 'iOS / watchOS',
+    description: 'Desarrollo nativo enfocado en rendimiento, WatchKit y arquitectura limpia.',
+    icon: 'apple'
+  },
+  {
+    name: 'SwiftUI & Flutter',
+    description: 'Interfaces declarativas fluidas y soluciones multiplataforma escalables.',
+    icon: 'layers'
+  },
+  {
+    name: 'Astro & Vanilla JS',
+    description: 'Arquitecturas orientadas a contenido, ultra rápidas y con mínimo JS.',
+    icon: 'zap'
+  },
+  {
+    name: 'PHP & SQL',
+    description: 'Bases de datos relacionales robustas, modelado y APIs de alta disponibilidad.',
+    icon: 'database'
+  },
+  {
+    name: 'Python & Local AI',
+    description: 'Automatización de pipelines, análisis de datos e integración de modelos locales.',
+    icon: 'cpu'
+  }
+];
+---
+
+<Layout
+  title="Javier Barrientos Montes | Full-Stack Software & Mobile Developer"
+  description="Con 4 años de experiencia transformando ideas complejas en productos digitales de alto rendimiento. Especializado en arquitecturas limpias, desarrollo nativo móvil y software a medida."
+>
+  <!-- SECCIÓN HERO -->
+  <section id="hero" class="hero-section">
+    <div class="hero-container hidden-reveal">
+      <div class="hero-badge">
+        <span class="badge-glow"></span>
+        <span class="badge-text">Disponible para ingeniería y consultoría de software</span>
+      </div>
+
+      <h1 class="hero-name">Javier Barrientos Montes</h1>
+
+      <div class="hero-subtitle-container">
+        <h2 class="hero-subtitle-heading">
+          <span id="hero-title" class="hero-typewriter"></span>
+          <span class="typewriter-cursor" aria-hidden="true">|</span>
+        </h2>
+      </div>
+
+      <p class="hero-bio">
+        Con 4 años de experiencia transformando ideas complejas en productos digitales de alto rendimiento. Especializado en arquitecturas limpias, desarrollo nativo móvil y software a medida. Mi enfoque combina la precisión de la ingeniería con interfaces fluidas, utilizando tecnologías como Swift, SwiftUI, Flutter, Astro, Vanilla JS y Python para construir soluciones escalables, desde plataformas inmobiliarias hasta ecosistemas de salud deportiva y webs institucionales.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#proyectos" class="btn-primary">
+          <span>Ver Proyectos</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <polyline points="19 12 12 19 5 12"></polyline>
+          </svg>
+        </a>
+
+        <a href="#stack" class="btn-secondary">
+          <span>Stack Tecnológico</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN STACK TECNOLÓGICO -->
+  <section id="stack" class="stack-section">
+    <div class="section-header hidden-reveal">
+      <span class="section-tag">Competencias Clave</span>
+      <h2 class="section-title">Stack Tecnológico</h2>
+      <p class="section-subtitle">
+        Herramientas y lenguajes seleccionados para construir productos resistentes y escalables.
+      </p>
+    </div>
+
+    <div class="stack-grid">
+      {techStack.map((tech) => (
+        <div class="stack-card hidden-reveal">
+          <div class="stack-header">
+            <span class="stack-tag">[{tech.name}]</span>
+          </div>
+          <p class="stack-description">{tech.description}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- SECCIÓN PROYECTOS DESTACADOS (BENTO GRID) -->
+  <section id="proyectos" class="projects-section">
+    <div class="section-header hidden-reveal">
+      <span class="section-tag">Trabajo Seleccionado</span>
+      <h2 class="section-title">Proyectos Destacados</h2>
+      <p class="section-subtitle">
+        Casos de éxito y plataformas en producción desarrolladas con ingeniería a medida.
+      </p>
+    </div>
+
+    <div class="bento-grid">
+      {projects.map((project, index) => {
+        const spanClass = bentoClasses[index % bentoClasses.length];
+        return (
+          <ProjectCard
+            title={project.data.title}
+            description={project.data.description}
+            tags={project.data.tags}
+            category={project.data.category}
+            image={project.data.image}
+            link={project.data.link}
+            featured={project.data.featured}
+            class={spanClass}
+          />
+        );
+      })}
+    </div>
+  </section>
+
+  <!-- SCRIPT CON VANILLA JS PURO -->
+  <script is:inline>
+    // 1. EFECTO TYPING
+    const targetText = "> Full-Stack Software & Mobile Developer_";
+    const heroTitleElement = document.getElementById("hero-title");
+
+    if (heroTitleElement) {
+      let charIndex = 0;
+      heroTitleElement.textContent = "";
+
+      const typeWriter = () => {
+        if (charIndex < targetText.length) {
+          heroTitleElement.textContent += targetText.charAt(charIndex);
+          charIndex++;
+          // Variación orgánica en la velocidad de tecleo
+          const speed = Math.floor(Math.random() * 30) + 40;
+          setTimeout(typeWriter, speed);
+        }
+      };
+
+      // Iniciar tras una pequeña pausa para asegurar renderizado fluido
+      setTimeout(typeWriter, 250);
+    }
+
+    // 2. REVEAL ON SCROLL CON INTERSECTIONOBSERVER
+    const revealCallback = (entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show-reveal");
+          observer.unobserve(entry.target);
+        }
+      });
+    };
+
+    const revealObserver = new IntersectionObserver(revealCallback, {
+      root: null,
+      rootMargin: "0px 0px -40px 0px",
+      threshold: 0.1,
+    });
+
+    document.querySelectorAll(".hidden-reveal").forEach((element) => {
+      revealObserver.observe(element);
+    });
+  </script>
+</Layout>
+
+<style>
+  /* ==========================================================================
+     REVEAL ANIMATIONS (ESTILOS SOLICITADOS)
+     ========================================================================== */
+  .hidden-reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+
+  .show-reveal {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+
+  /* ==========================================================================
+     HERO SECTION
+     ========================================================================== */
+  .hero-section {
+    padding: 3rem 0 5rem;
+    position: relative;
+  }
+
+  .hero-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    max-width: 880px;
+  }
+
+  .hero-badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.4rem 1rem;
+    border-radius: 9999px;
+    background: rgba(56, 189, 248, 0.06);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    font-size: 0.82rem;
+    font-family: var(--font-mono);
+    color: var(--accent);
+  }
+
+  .badge-glow {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+  }
+
+  .hero-name {
+    font-size: clamp(2.5rem, 6vw, 4.2rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+    color: var(--text-primary);
+    background: linear-gradient(180deg, #ffffff 40%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-subtitle-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .hero-subtitle-heading {
+    font-family: var(--font-mono);
+    font-size: clamp(1.1rem, 2.8vw, 1.6rem);
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+    min-height: 2.2rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .typewriter-cursor {
+    display: inline-block;
+    color: var(--accent);
+    font-weight: 300;
+    animation: blink-caret 0.9s step-end infinite;
+    margin-left: 2px;
+  }
+
+  @keyframes blink-caret {
+    from, to { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .hero-bio {
+    font-size: clamp(1.05rem, 1.8vw, 1.2rem);
+    line-height: 1.8;
+    color: var(--text-secondary);
+    font-weight: 400;
+    margin-top: 0.5rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1.75rem;
+    border-radius: 12px;
+    background: var(--text-primary);
+    color: var(--bg-page);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.15);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    background: #ffffff;
+    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.25);
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1.75rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.25s ease;
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+  }
+
+  /* ==========================================================================
+     SECTION HEADERS COMUNES
+     ========================================================================== */
+  .section-header {
+    margin-bottom: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .section-tag {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .section-title {
+    font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.03em;
+  }
+
+  .section-subtitle {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    max-width: 650px;
+    line-height: 1.6;
+  }
+
+  /* ==========================================================================
+     STACK SECTION
+     ========================================================================== */
+  .stack-section {
+    padding: 3rem 0 5rem;
+  }
+
+  .stack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .stack-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 14px;
+    padding: 1.5rem;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .stack-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--border-hover);
+    background: var(--bg-card-hover);
+    box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.4);
+  }
+
+  .stack-header {
+    display: flex;
+    align-items: center;
+  }
+
+  .stack-tag {
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--accent);
+    background: rgba(56, 189, 248, 0.08);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    padding: 0.35rem 0.75rem;
+    border-radius: 8px;
+    letter-spacing: -0.01em;
+  }
+
+  .stack-description {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+
+  /* ==========================================================================
+     PROJECTS BENTO GRID
+     ========================================================================== */
+  .projects-section {
+    padding: 2rem 0 4rem;
+  }
+
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1.5rem;
+  }
+
+  /* Bento span configurations */
+  :global(.bento-span-7) {
+    grid-column: span 7;
+  }
+
+  :global(.bento-span-5) {
+    grid-column: span 5;
+  }
+
+  :global(.bento-span-12) {
+    grid-column: span 12;
+  }
+
+  @media (max-width: 960px) {
+    :global(.bento-span-7),
+    :global(.bento-span-5),
+    :global(.bento-span-12) {
+      grid-column: span 12;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .hero-section {
+      padding: 1.5rem 0 3.5rem;
+    }
+
+    .hero-actions {
+      flex-direction: column;
+      align-items: stretch;
+      width: 100%;
+    }
+
+    .btn-primary, .btn-secondary {
+      justify-content: center;
+    }
+  }
+</style>

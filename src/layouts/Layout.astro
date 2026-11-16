@@ -1,0 +1,338 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Javier Barrientos Montes | Full-Stack Software & Mobile Developer",
+  description = "Portafolio profesional de Javier Barrientos Montes. Especializado en arquitecturas limpias, desarrollo nativo móvil y software a medida."
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Fondo ambiental y sutil iluminación -->
+    <div class="ambient-glow" aria-hidden="true"></div>
+    <div class="bg-grid-pattern" aria-hidden="true"></div>
+
+    <!-- Navegación superior minimalista -->
+    <header class="site-header">
+      <nav class="nav-container">
+        <a href="#hero" class="brand-monogram">
+          <span class="monogram-text">JB</span>
+          <span class="status-indicator" title="Disponible para nuevos proyectos">
+            <span class="status-pulse"></span>
+            <span class="status-dot"></span>
+          </span>
+        </a>
+
+        <div class="nav-links">
+          <a href="#stack" class="nav-link">Stack</a>
+          <a href="#proyectos" class="nav-link">Proyectos</a>
+          <a href="mailto:contacto@javierbarrientos.dev" class="contact-btn">
+            <span>Contacto</span>
+            <svg class="btn-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 17L17 7M17 7H7M17 7V17" />
+            </svg>
+          </a>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="page-container">
+      <slot />
+    </main>
+
+    <!-- Footer minimalista -->
+    <footer class="site-footer">
+      <div class="footer-container">
+        <div class="footer-copy">
+          <span class="footer-name">Javier Barrientos Montes</span>
+          <span class="footer-divider">•</span>
+          <span>Desarrollo de software de alta fidelidad</span>
+        </div>
+        <p class="footer-tech">
+          Diseñado con <span class="highlight">Astro</span>, Dark Mode nativo y Bento Grid.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --bg-page: #07080c;
+    --bg-surface: #0e111a;
+    --bg-card: rgba(15, 18, 27, 0.7);
+    --bg-card-hover: rgba(22, 27, 40, 0.85);
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(255, 255, 255, 0.18);
+    --border-accent: rgba(56, 189, 248, 0.35);
+
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --accent: #38bdf8;
+    --accent-indigo: #818cf8;
+    --accent-emerald: #34d399;
+    --accent-gradient: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, monospace;
+
+    color-scheme: dark;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    position: relative;
+    background-color: var(--bg-page);
+  }
+
+  /* Fondo ambiental sutil */
+  .ambient-glow {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    max-width: 1400px;
+    height: 600px;
+    background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.08) 0%, rgba(129, 140, 248, 0.03) 40%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .bg-grid-pattern {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse at 50% 30%, black 20%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse at 50% 30%, black 20%, transparent 80%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Header */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background: rgba(7, 8, 12, 0.75);
+    border-bottom: 1px solid var(--border-subtle);
+    transition: border-color 0.3s ease;
+  }
+
+  .nav-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .brand-monogram {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    color: var(--text-primary);
+  }
+
+  .monogram-text {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: -0.05em;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .status-indicator {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 8px;
+    height: 8px;
+  }
+
+  .status-pulse {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: var(--accent-emerald);
+    opacity: 0.75;
+    animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  .status-dot {
+    position: relative;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--accent-emerald);
+  }
+
+  @keyframes ping {
+    75%, 100% {
+      transform: scale(2.4);
+      opacity: 0;
+    }
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .nav-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+
+  .nav-link:hover {
+    color: var(--text-primary);
+  }
+
+  .contact-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.9rem;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .contact-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--border-hover);
+    transform: translateY(-1px);
+  }
+
+  .btn-arrow {
+    transition: transform 0.2s ease;
+  }
+
+  .contact-btn:hover .btn-arrow {
+    transform: translate(2px, -2px);
+  }
+
+  /* Page container */
+  .page-container {
+    flex: 1;
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Footer */
+  .site-footer {
+    border-top: 1px solid var(--border-subtle);
+    background: rgba(7, 8, 12, 0.85);
+    padding: 2.5rem 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .footer-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .footer-copy {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .footer-name {
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  .footer-divider {
+    color: var(--border-subtle);
+  }
+
+  .footer-tech .highlight {
+    color: var(--accent);
+  }
+
+  @media (max-width: 640px) {
+    .page-container {
+      padding: 2rem 1.2rem 4rem;
+    }
+  }
+</style>
