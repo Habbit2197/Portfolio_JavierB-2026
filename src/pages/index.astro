@@ -122,6 +122,7 @@ const techStack = [
         const spanClass = bentoClasses[index % bentoClasses.length];
         return (
           <ProjectCard
+            project={project}
             title={project.data.title}
             description={project.data.description}
             tags={project.data.tags}
